@@ -16,13 +16,17 @@ const isImageURL = require('image-url-validator').default;
 
 
   app.get('/filteredimage', async (req, res) => {
+
     const  url =req.query.image_url;
     const isValidURL = await isImageURL(url);
     if(!isValidURL) {
       return res.status(400).send("the URL of the image is not valid.")
     }
     const  filteredpath  = await filterImageFromURL(url);
-    res.status(201).sendFile(filteredpath);
+    res.status(200).sendFile(filteredpath,(err) =>{
+      deleteLocalFiles([filteredpath]);
+    });
+
   });
 
   // Root Endpoint
