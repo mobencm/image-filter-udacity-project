@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+const isImageURL = require('image-url-validator').default;
 
 (async () => {
 
@@ -32,9 +33,12 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //! END @TODO1
 
   app.get('/filteredimage', async (req, res) => {
-    let url =req.query.image_url;
-    console.log(url);
-    let filteredpath  = filterImageFromURL(url);
+    const  url =req.query.image_url;
+    const isValidURL = await isImageURL(url);
+    if(!isValidURL) {
+      return res.status(400).send("the URL of the image is not valid.")
+    }
+    const  filteredpath  = filterImageFromURL(url);
     res.send("finished")
   });
 
