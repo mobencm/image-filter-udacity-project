@@ -24,6 +24,9 @@ const isImageURL = require('image-url-validator').default;
     }
     const  filteredpath  = await filterImageFromURL(url);
     res.status(200).sendFile(filteredpath,(err) =>{
+      if (err) {
+        res.status(500).send('Error sending response.');
+      }
       deleteLocalFiles([filteredpath]);
     });
 
